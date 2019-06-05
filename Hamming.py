@@ -23,7 +23,6 @@ def MultiVerificadora(palavra, MatrizReconhecedora):
         aux = aux % 2
         resul.append(aux)
         aux = 0
-    print('resul {}' .format(resul))
     return resul
 
 
@@ -38,7 +37,7 @@ def Verificadora(verifica):
         aux += 2
     if verifica[3] == 1:
         aux += 1
-    print('ResulVerificaCAo {}' .format(aux))
+    print('ResulVerificacao {}' .format(aux))
     return aux
 
 
@@ -63,13 +62,15 @@ def CalculaG(substring):
 
 def Decodifica(substring, MatrizReconhecedora):
     ValorGOriginal = substring[3]
+    print('ValorGOriginal {}' .format(ValorGOriginal))
     NovaString = list()
 
     for i in range(4, len(substring)):
         NovaString.append(substring[i])
 
-    print(NovaString)
+    print('NovaString {}' .format(NovaString))
     verifica = MultiVerificadora(NovaString, MatrizReconhecedora)
+    print('verifica {}' .format(verifica))
 
     ValorResultante = Verificadora(verifica)
 
@@ -77,26 +78,26 @@ def Decodifica(substring, MatrizReconhecedora):
 
     if ValorGRecalculado != ValorGOriginal:
         print('Dois erros deu ruim')
-        salvaPalavra(substring)
+        salvaPalavraModificada(substring)
     else:
         if ValorResultante == 0:
             print('correto')
-            salvaPalavra(substring)
+            salvaPalavraModificada(substring)
         else:
             ValorCorrigido = Correcao(ValorResultante, NovaString)
             print('Palavra Corrigida {}' .format(ValorCorrigido))
-            salvaPalavra(ValorCorrigido)
+            salvaPalavraModificada(ValorCorrigido)
 
 
 def salvaPalavra(PalavraFinal):
-    arq = open('/home/fernando/Area de Trabalho//DadosFinais.thc','a')
+    arq = open('/home/fernando/Area de Trabalho/DadosFinais.thc','a')
     for i in range(0, len(PalavraFinal)):
         arq.writelines(str(PalavraFinal[i]))
     arq.close()
 
 
 def salvaPalavraModificada(PalavraFinal):
-    arq = open('//home//fernando//Area de Trabalho//DadosFinaisModificados.thc','a')
+    arq = open('/home/fernando/Area de Trabalho/DadosFinaisModificados.thc','a')
     for i in range(0, len(PalavraFinal)):
         arq.writelines(str(PalavraFinal[i]))
     arq.close()
@@ -105,8 +106,10 @@ def salvaPalavraModificada(PalavraFinal):
 def Codifica(substring, MatrizGeradora):
 
     PalavraFinal = list()
+    palavra = list()
     palavra = MultiGeradora(substring, MatrizGeradora)
-    G = CalculaG(substring)
+    G = CalculaG(palavra)
+    print('Palavra {}' .format(palavra))
     PalavraFinal.append(0)
     PalavraFinal.append(0)
     PalavraFinal.append(0)
@@ -115,6 +118,8 @@ def Codifica(substring, MatrizGeradora):
     for i in range(0, len(palavra)):
         PalavraFinal.append(palavra[i])
     salvaPalavra(PalavraFinal)
+    print('L = Lixo\t G = Bit G\t P = Paridade\t D = Dados')
+    print('             [L, L, L, G, P, P, D, P, D, D, D, P, D, D, D, D]')
     print('PalavraFinal {}' .format(PalavraFinal))
 
 
@@ -122,6 +127,7 @@ def Codifica(substring, MatrizGeradora):
 palavra = list()
 string = list()
 substring = list()
+aux = 0
 #op = int(input('Digite uma opção'))
 
 MatrizGeradora = [['1', '1', '0', '1', '1', '0', '1', '0'],
@@ -142,8 +148,9 @@ MatrizReconhecedora = [['1', '0', '1', '0', '1', '0', '1', '0', '1', '0', '1', '
                        ['0', '0', '0', '1', '1', '1', '1', '0', '0', '0', '0', '1'],
                        ['0', '0', '0', '0', '0', '0', '0', '1', '1', '1', '1', '1']]
 
-print(str(sys.argv[2]))
+
 if str(sys.argv[2]) == '-w':
+    aux = 1
     ref_arquivo = open(str(sys.argv[1]) , "r")
     for linha in ref_arquivo:
         bit = linha.split()
@@ -155,10 +162,12 @@ if str(sys.argv[2]) == '-w':
         if len(substring) == 8:
             Codifica(substring, MatrizGeradora)
             #print(substring)
+
             substring.clear()
     ref_arquivo.close()
 
 if sys.argv[2] == '-r':
+    aux = 1
     ref_arquivo = open(str(sys.argv[1]), "r")
     for linha in ref_arquivo:
         bit = linha.split()
@@ -170,6 +179,7 @@ if sys.argv[2] == '-r':
         if len(substring) == 16:
             #print(substring)
             Decodifica(substring, MatrizReconhecedora)
+            aux += 8
             substring.clear()
     ref_arquivo.close()
 
