@@ -23,12 +23,13 @@ def MultiVerificadora(palavra, MatrizReconhecedora):
         aux = aux % 2
         resul.append(aux)
         aux = 0
+        resul.reverse()
     return resul
 
 
 def Verificadora(verifica):
     aux = 0
-    verifica.reverse()
+    #verifica.reverse()
     if verifica[0] == 1:
         aux += 8
     if verifica[1] == 1:
@@ -43,73 +44,116 @@ def Verificadora(verifica):
 
 def Correcao(ValorResultante, palavra):
 
-    if palavra[ValorResultante - 1] == 1:
-        palavra[ValorResultante - 1] = str(0)
+    #print('\n\n------------palavra[ValorResultante - 1]: {} '.format(palavra[ValorResultante - 1]))
+    #print('Pos ini da palavra {}' .format(palavra.index(0)))
+    #print('Pos ValorResultante da palavra {}' .format(palavra.index(ValorResultante - 1)))
+    #print(type(palavra))
+    #print(type( palavra[ValorResultante - 1]))
+    #print('--Palavra {}' .format(palavra))
+    if palavra[ValorResultante  - 1] == '1':
+        #print('entrou na pos {}' .format((ValorResultante  - 1)))
+        palavra[ValorResultante - 1] = '0'
     else:
-        palavra[ValorResultante - 1] = str(1)
+        #print('---entrou na pos {}' .format((ValorResultante  - 1)))
+        palavra[ValorResultante - 1] = '1'
+    #print('--Palavra CORRIGIDA {}' .format(palavra))
     return palavra
 
 
 def CalculaG(substring):
-    VarG = bool(substring[0])
+    substring = list(map(int, substring))
+    #print('substring {} '.format(substring))
+    VarG = substring[0]
+    #print('substring[0] antes for{} '.format(substring[0]))
+
     for i in range(1, len(substring)):
-        if VarG == True and substring[i] == True:
-            VarG = False
-        if VarG == False and substring[i] == True:
-            VarG = True
-        if VarG == True and substring[i] == False:
-            VarG = True
-        if VarG == False and substring[i] == False:
-            VarG = False
+        #print('VarG {} '.format(VarG))
+        #print('substring[i]: {}' .format(substring[i]))
+        VarG = (bool(VarG) ^ bool(substring[i]))
+        #print('varg resul {}\n----------------------------------------------'.format(VarG))
 
     return int(VarG)
+    """
+    substring = list(map(int, substring))
+    print(type(substring))
+    VarG = substring[0]
+    #print('valor2 {} '.format(int(substring[0])))
+    #print('valor {} '.format(bool(substring[0])))
 
+    for i in range(1, len(substring)):
+        int(VarG)
+        vetor = substring[i]
+        int(vetor)
+        print('vetor {} e VarG {}' .format(type(vetor), type(VarG)))
+        print('VarG {} '.format(VarG))
+        print('substring[i]: {}' .format(vetor))
 
+        if VarG == True and vetor == True:
+            VarG = 0
+        if VarG == 0 and vetor == 1:
+            VarG = 1
+        if VarG == 1 and vetor == 0:
+            VarG = 1
+        if VarG == 0 and vetor == 0:
+            VarG = 0
+        print('varg resul {}\n----------------------------------------------'.format(VarG))
+
+    return int(VarG)
+    """
 
 def Decodifica(substring, MatrizReconhecedora):
     PalavraFinal = list()
-    print('L = Lixo\t G = Bit G\t P = Paridade\t D = Dados')
+    print('L = Lixo\t G = Bit G\t P = Paridade\t D = Dados\n')
     print('            [ L ,  L ,  L ,  D ,  D ,  D ,  D ,  P ,  D ,  D ,  D ,  P ,  D ,  P ,  P ,  G ]')
-    print('Palavra Lida{}' .format(substring))
+    print('Palavra Lida{}\n' .format(substring))
 
     ValorGOriginal = substring[15]
-    #print('ValorGOriginal {}' .format(ValorGOriginal))
+    #print('-------ValorGOriginal {}' .format(ValorGOriginal))
     NovaString = list()
 
     for i in range(3, len(substring)-1):
         NovaString.append(substring[i])
 
+
     NovaString.reverse()
+    #print('------NovaString 12 bits{}' .format(NovaString))
     verifica = MultiVerificadora(NovaString, MatrizReconhecedora)
-    print('Verificacao {}' .format(verifica))
+    #print('------Verificacao {}' .format(verifica))
 
     ValorResultante = Verificadora(verifica)
+    #print('------ValorResultante: Pos: {}' .format(ValorResultante))
 
-    ValorGRecalculado = CalculaG(NovaString)
-    #print('ValorGRecalculado {}' .format(ValorGRecalculado))
+    #print('------NovaString REVERSE {}' .format(NovaString))
 
-    if int(ValorGRecalculado) != int(ValorGOriginal):
-        print('Dois Erros! Deu Ruim')
+
+
+    if ValorResultante == 0:
+        print('Palavra Correta --- String correta foi salva ---')
         salvaPalavraModificada(substring)
     else:
-        if ValorResultante == 0:
-            print('Palavra Correta')
-            salvaPalavraModificada(substring)
-        else:
+        flag = True
+        if ValorResultante < (len(NovaString)-1):
             ValorCorrigido = Correcao(ValorResultante, NovaString)
-            PalavraFinal.append(str(0))
-            PalavraFinal.append(str(0))
-            PalavraFinal.append(str(0))
-            
-            ValorCorrigido.reverse()
-            for i in range(0, len(ValorCorrigido)):
-                PalavraFinal.append(ValorCorrigido[i])
+            ValorGRecalculado = CalculaG(ValorCorrigido)
+            print('Palavra (12 bits): {}' .format(ValorCorrigido))
+            #print('------ValorGRecalculado {}' .format(ValorGRecalculado))
 
-            PalavraFinal.append(str(ValorGRecalculado))
-            print('L = Lixo\t G = Bit G\t P = Paridade\t D = Dados')
-            print('                 [ L ,  L ,  L ,  D ,  D ,  D ,  D ,  P ,  D ,  D ,  D ,  P ,  D ,  P ,  P ,  G ]')
-            print('Palavra Corrigida{}' .format(PalavraFinal))
+        else:
+            flag = False
+
+        if flag == False:
+            print('Dois Erros, Deu Ruim!!! --- String salva mesmo com erro ---')
             salvaPalavraModificada(PalavraFinal)
+        else:
+            if int(ValorGRecalculado) != int(ValorGOriginal):
+                print('Dois Erros, Deu Ruim!!! --- String salva mesmo com erro ---')
+                salvaPalavraModificada(PalavraFinal)
+            else:
+                print('Um Erro !!! --- String foi Corrigida ---')
+                print('L = Lixo\t G = Bit G\t P = Paridade\t D = Dados')
+                print('                 [ L ,  L ,  L ,  D ,  D ,  D ,  D ,  P ,  D ,  D ,  D ,  P ,  D ,  P ,  P ,  G ]')
+                print('Palavra Corrigida{}' .format(PalavraFinal))
+                salvaPalavraModificada(PalavraFinal)
 
 
 def salvaPalavra(PalavraFinal):
@@ -140,17 +184,17 @@ def Codifica(substring, MatrizGeradora):
     PalavraFinal.append(0)
     PalavraFinal.append(0)
     PalavraFinal.append(0)
-    
+
     palavra.reverse()
     for i in range(0, len(palavra)):
         PalavraFinal.append(palavra[i])
-    
+
     PalavraFinal.append(G)
-    
+
     salvaPalavra(PalavraFinal)
-    
+
     #palavra.reverse()
-    
+
     print('L = Lixo\t G = Bit G\t P = Paridade\t D = Dados')
     print('             [L, L, L, D, D, D, D, P, D, D, D, P, D, P, P, G]')
     print('PalavraFinal {}' .format(PalavraFinal))
@@ -161,7 +205,6 @@ palavra = list()
 string = list()
 substring = list()
 aux = 0
-#op = int(input('Digite uma opção'))
 
 MatrizGeradora = [['1', '1', '0', '1', '1', '0', '1', '0'],
                   ['1', '0', '1', '1', '0', '1', '1', '0'],
