@@ -73,7 +73,8 @@ def CalculaG(substring):
         #print('varg resul {}\n----------------------------------------------'.format(VarG))
 
     return int(VarG)
-    """
+    
+    '''
     substring = list(map(int, substring))
     print(type(substring))
     VarG = substring[0]
@@ -99,13 +100,13 @@ def CalculaG(substring):
         print('varg resul {}\n----------------------------------------------'.format(VarG))
 
     return int(VarG)
-    """
+    '''
 
 def Decodifica(substring, MatrizReconhecedora):
     PalavraFinal = list()
     print('L = Lixo\t G = Bit G\t P = Paridade\t D = Dados\n')
-    print('            [ L ,  L ,  L ,  D ,  D ,  D ,  D ,  P ,  D ,  D ,  D ,  P ,  D ,  P ,  P ,  G ]')
-    print('Palavra Lida{}\n' .format(substring))
+    print('             [ L ,  L ,  L ,  D ,  D ,  D ,  D ,  P ,  D ,  D ,  D ,  P ,  D ,  P ,  P ,  G ]')
+    print('Palavra Lida {}\n' .format(substring))
 
     ValorGOriginal = substring[15]
     #print('-------ValorGOriginal {}' .format(ValorGOriginal))
@@ -128,31 +129,41 @@ def Decodifica(substring, MatrizReconhecedora):
 
 
     if ValorResultante == 0:
-        print('Palavra Correta --- String correta foi salva ---')
+        print('Palavra Correta --- String Correta foi Salva ---')
         salvaPalavraModificada(substring)
     else:
         flag = True
         if ValorResultante < (len(NovaString)-1):
             ValorCorrigido = Correcao(ValorResultante, NovaString)
             ValorGRecalculado = CalculaG(ValorCorrigido)
-            print('Palavra (12 bits): {}' .format(ValorCorrigido))
+            #print('Palavra (12 bits): {}' .format(ValorCorrigido))
             #print('------ValorGRecalculado {}' .format(ValorGRecalculado))
+            
+            PalavraFinal.append(0)
+            PalavraFinal.append(0)
+            PalavraFinal.append(0)
+
+            ValorCorrigido.reverse()
+            for i in range(0, len(ValorCorrigido)):
+                PalavraFinal.append(ValorCorrigido[i])
+
+            PalavraFinal.append(ValorGRecalculado)
 
         else:
             flag = False
 
         if flag == False:
-            print('Dois Erros, Deu Ruim!!! --- String salva mesmo com erro ---')
-            salvaPalavraModificada(PalavraFinal)
+            print('Dois Erros, Deu Ruim!!! --- String Salva com Erro ---')
+            salvaPalavraModificada(substring)
         else:
             if int(ValorGRecalculado) != int(ValorGOriginal):
-                print('Dois Erros, Deu Ruim!!! --- String salva mesmo com erro ---')
-                salvaPalavraModificada(PalavraFinal)
+                print('Dois Erros, Deu Ruim!!! --- String Salva com Erro ---')
+                salvaPalavraModificada(substring)
             else:
                 print('Um Erro !!! --- String foi Corrigida ---')
-                print('L = Lixo\t G = Bit G\t P = Paridade\t D = Dados')
-                print('                 [ L ,  L ,  L ,  D ,  D ,  D ,  D ,  P ,  D ,  D ,  D ,  P ,  D ,  P ,  P ,  G ]')
-                print('Palavra Corrigida{}' .format(PalavraFinal))
+                #print('L = Lixo\t G = Bit G\t P = Paridade\t D = Dados')
+                print('                  [ L ,  L ,  L ,  D ,  D ,  D ,  D ,  P ,  D ,  D ,  D ,  P ,  D ,  P ,  P ,  G ]')
+                print('Palavra Corrigida {}' .format(PalavraFinal))
                 salvaPalavraModificada(PalavraFinal)
 
 
