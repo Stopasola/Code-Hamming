@@ -73,7 +73,7 @@ def CalculaG(substring):
         #print('varg resul {}\n----------------------------------------------'.format(VarG))
 
     return int(VarG)
-    
+
     '''
     substring = list(map(int, substring))
     print(type(substring))
@@ -138,7 +138,7 @@ def Decodifica(substring, MatrizReconhecedora):
             ValorGRecalculado = CalculaG(ValorCorrigido)
             #print('Palavra (12 bits): {}' .format(ValorCorrigido))
             #print('------ValorGRecalculado {}' .format(ValorGRecalculado))
-            
+
             PalavraFinal.append(0)
             PalavraFinal.append(0)
             PalavraFinal.append(0)
@@ -239,18 +239,20 @@ MatrizReconhecedora = [['1', '0', '1', '0', '1', '0', '1', '0', '1', '0', '1', '
 if str(sys.argv[2]) == '-w':
     aux = 1
     ref_arquivo = open(str(sys.argv[1]) , "r")
-    for linha in ref_arquivo:
-        bit = linha.split()
-        for bit in linha:
-            string.append(bit[0])
+    with open( str(sys.argv[1]), 'r+b') as file:
+        byte = file.read(1)
+        while byte != b'':
+            print(byte)
+            binary = bin(ord(byte)).replace('b','').zfill(8)
+            substring = [int(x) for x in str(binary)]
+            print(substring)
+            while len(substring) > 8:
+                substring.pop(0)
 
-    for j in range(0, len(string)):
-        substring.append(string[j])
-        if len(substring) == 8:
-            #print('Substring {}' .format(substring))
             Codifica(substring, MatrizGeradora)
+            byte = file.read(1)
             substring.clear()
-    ref_arquivo.close()
+
 
 if sys.argv[2] == '-r':
     aux = 1
