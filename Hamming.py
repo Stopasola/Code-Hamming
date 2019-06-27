@@ -26,6 +26,11 @@ def MultiVerificadora(palavra, MatrizReconhecedora):
         resul.reverse()
     return resul
 
+    #testegit
+
+
+
+
 
 def Verificadora(verifica):
     aux = 0
